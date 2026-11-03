@@ -1,0 +1,60 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# fabric.yaml — the CENTRAL SOURCE OF TRUTH for router configuration.
+#
+# This single file describes the whole fabric: which routers exist, who is allowed
+# to write/read which key namespaces, and how the routers reach each other. Nobody
+# hand-edits a router's config.json5 — `stack/render.py` turns THIS file into every
+# router's rendered config. Change a value here, re-render, and every affected
+# router gets a consistent config. That is the answer to "how are configurations
+# managed and synchronized across the network": one declared intent, generated out.
+#
+# It mirrors how the real goat fabric works: the operator portal is the registry
+# (the declared issuance set), and Ansible renders each router from it. This file is
+# the same idea, shrunk to something you can read in one screen and run on a laptop.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Where the "goat side" of the fabric listens, and where pods dial it. In the
+# loopback demo these are docker-network hostnames; on ZAGROS the pod's endpoint
+# arrives in the signed join bundle (never hand-typed). See docs/router-config.md.
+fabric:
+  # The goat-side router every pod peers OUT to.
+  ingress_endpoint: "tls/fabric-router:7447"
+  # The bilateral prefix the fabric publishes back to pods (release/goat/** by
+  # convention). A pod may subscribe here once a bilateral grant exists.
+  inbound_namespace: "release/goat"
+
+# The routers in this fabric. Each entry renders to one config.json5.
+#   - role: pod     → single-tenant edge router, default-DENY, owns ONE partner namespace.
+#   - role: fabric  → the goat-side receiver. In the real fabric this is the ingress
+#                     gateway + core router (multi-tenant, the load-bearing enforcement).
+routers:
+  - name: pod-router
+    role: pod
+    listen_port: 7447
+    # A pod router carries exactly one partner (it is that partner's own box).
+    partner: velmara-demo
+
+  - name: fabric-router
+    role: fabric
+    listen_port: 7447
+
+# The participants. On ZAGROS each is a per-uuid SLOT the portal assigns: the cert CN,
+# the portal prefix, and the write namespace are ALL the slot anchor (a UUID, not a
+# human name). `slot` below is that anchor. Human display/nation are for operators
+# and inspection tools only — they never appear in a machine path (ACL/cert/wire-key
+# stay the UUID; ADR 1039 slot-alias discipline).
+partners:
+  - handle: velmara-demo
+    display: "Velmara Autonomous Systems Command"
+    nation: "Republic of Velmara"
+    # The per-uuid ZAGROS slot anchor. Cert CN == portal prefix == write namespace.
+    # (Demo value; a real one is minted at onboarding and rides the signed bundle.)
+    slot: "a1b2c3d4e5f60718293a4b5c6d7e8f90"
+    # What this partner may do. The pod router default-denies everything else.
+    #   write → the partner publishes here (its own slot).
+    #   read  → the partner subscribes here (its own slot + bilateral inbound).
+    write:
+      - "a1b2c3d4e5f60718293a4b5c6d7e8f90/**"
+    read:
+      - "a1b2c3d4e5f60718293a4b5c6d7e8f90/**"
+      - "release/goat/**"

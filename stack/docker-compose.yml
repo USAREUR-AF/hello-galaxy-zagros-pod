@@ -1,0 +1,50 @@
+# docker-compose.yml — the loopback fabric: a partner POD router peered to a stand-in
+# FABRIC (goat-side) router, both mTLS. This is what the smoke test stands up to prove
+# data peers between routers and that the pod's default-deny holds.
+#
+# Both configs are RENDERED from stack/registry/fabric.yaml by stack/render.py — nothing
+# here is hand-configured. Certs come from stack/gen-certs.sh. All state is under
+# stack/.state/ (gitignored). Image is the stock upstream zenoh, pinned by digest.
+#
+# Topology:
+#   pod-router  ──dials──▶  fabric-router        (mTLS peering, docker DNS)
+#   host:17447 ─▶ pod-router:7447                (pod-side clients connect here)
+#   host:17448 ─▶ fabric-router:7447             (fabric-side clients connect here)
+
+services:
+  fabric-router:
+    image: eclipse/zenoh:1.9.0@sha256:157965d71e0bfd0a044d76a985ff0e5c306ad3968929168fb9678cd2a7fec23f
+    container_name: hg-fabric-router
+    hostname: fabric-router
+    networks: [fabric]
+    ports:
+      - "127.0.0.1:17448:7447"
+    environment:
+      - RUST_LOG=${ZENOH_LOG:-zenoh=info}
+    volumes:
+      - ./.state/render/fabric-router.config.json5:/etc/zenoh/config.json5:ro
+      - ./.state/tls/fabric-router-cert.pem:/etc/zenoh/tls/router-cert.pem:ro
+      - ./.state/tls/fabric-router-key.pem:/etc/zenoh/tls/router-key.pem:ro
+      - ./.state/tls/ca-roots.pem:/etc/zenoh/tls/ca-roots.pem:ro
+    command: ["-c", "/etc/zenoh/config.json5"]
+
+  pod-router:
+    image: eclipse/zenoh:1.9.0@sha256:157965d71e0bfd0a044d76a985ff0e5c306ad3968929168fb9678cd2a7fec23f
+    container_name: hg-pod-router
+    hostname: pod-router
+    networks: [fabric]
+    depends_on: [fabric-router]
+    ports:
+      - "127.0.0.1:17447:7447"
+    environment:
+      - RUST_LOG=${ZENOH_LOG:-zenoh=info}
+    volumes:
+      - ./.state/render/pod-router.config.json5:/etc/zenoh/config.json5:ro
+      - ./.state/tls/pod-router-cert.pem:/etc/zenoh/tls/router-cert.pem:ro
+      - ./.state/tls/pod-router-key.pem:/etc/zenoh/tls/router-key.pem:ro
+      - ./.state/tls/ca-roots.pem:/etc/zenoh/tls/ca-roots.pem:ro
+    command: ["-c", "/etc/zenoh/config.json5"]
+
+networks:
+  fabric:
+    name: hg-fabric

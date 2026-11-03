@@ -1,0 +1,3 @@
+stack/.state/
+*.pyc
+__pycache__/

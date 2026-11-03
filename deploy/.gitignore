@@ -1,0 +1,19 @@
+# Terraform state — contains account ids, resource ids, public IPs, AND the
+# generated SSH private key. NEVER commit.
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+
+# Account/operator-specific inputs.
+terraform.tfvars
+*.auto.tfvars
+
+# Generated SSH keypair.
+.ssh/
+*.pem
+
+# Deploy-time secrets delivered out-of-band (the signed bundle + mesh key).
+bundle/
+pod.env

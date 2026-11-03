@@ -1,0 +1,54 @@
+// fabric-router.json5.tmpl — the "goat side" of the fabric, for the loopback demo.
+//
+// Rendered by stack/render.py from stack/registry/fabric.yaml. In the loopback this
+// stands in for what is, in the real fabric, a much larger config: the ingress
+// gateway + multi-tenant core router that authenticates every pod, admits its data
+// origin-scoped, and records provenance (ADR 1020). Here it is the minimum needed to
+// PROVE peering — it accepts the pod's peering link and routes the traffic so the
+// smoke test can observe data crossing.
+//
+// It is deliberately permissive (allow the partner namespaces + the bilateral
+// inbound) so the test isolates and exercises the POD's default-deny, which is the
+// security property we are proving. The real core router is NOT permissive.
+{
+  mode: "router",
+
+  listen: { endpoints: ["tls/0.0.0.0:__LISTEN_PORT__"] },
+
+  id: "__ROUTER_ID__",
+
+  transport: {
+    link: {
+      tls: {
+        listen_certificate:  "/etc/zenoh/tls/router-cert.pem",
+        listen_private_key:  "/etc/zenoh/tls/router-key.pem",
+        connect_certificate: "/etc/zenoh/tls/router-cert.pem",
+        connect_private_key: "/etc/zenoh/tls/router-key.pem",
+        root_ca_certificate: "/etc/zenoh/tls/ca-roots.pem",
+        enable_mtls: true,
+        verify_name_on_connect: false,
+      },
+    },
+  },
+
+  plugins_loading: { enabled: true, search_dirs: ["/", "/opt/zenoh/plugins"] },
+
+  // Receiver-side ACL: DELIBERATELY permissive (default-allow). This is a stand-in for
+  // the goat side; we make it wide open ON PURPOSE so the smoke test isolates the POD's
+  // own default-deny — i.e. it proves that even a wide-open receiver never sees
+  // out-of-namespace data, because the pod stops it at the edge. The REAL goat core
+  // router/ingress gateway is NOT permissive: it is per-tenant and load-bearing (ADR 1020).
+  // (The declared partner namespaces are still generated below for documentation; under
+  // default-allow they are advisory.)
+  access_control: {
+    enabled: true,
+    default_permission: "allow",
+    rules: __ACL_RULES__,
+    subjects: [
+      { id: "mtls-peer", link_protocols: ["tls"] },
+    ],
+    policies: [
+      { rules: __ACL_RULE_IDS__, subjects: ["mtls-peer"] },
+    ],
+  },
+}

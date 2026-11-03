@@ -1,0 +1,23 @@
+#cloud-config
+# Installs the pod's prerequisites — no secrets, no enrollment here. Enrollment +
+# pod bring-up happen in pod-up.sh (run after you deliver the bundle out-of-band).
+package_update: true
+packages:
+  - docker.io
+  - python3-pip
+  - python3-venv
+  - curl
+  - jq
+  - gettext-base
+runcmd:
+  # Docker on for the ubuntu user.
+  - systemctl enable --now docker
+  - usermod -aG docker ubuntu
+  # NetBird client (mesh enrollment happens later, in pod-up.sh, with the bundle key).
+  - curl -fsSL https://pkgs.netbird.io/install.sh | sh
+  # A Zenoh client for publishing through the pod router (isolated venv; PEP 668).
+  - python3 -m venv /opt/zenoh-venv
+  - /opt/zenoh-venv/bin/pip install --quiet "eclipse-zenoh==1.9.0"
+  # Pre-pull the router image so pod-up.sh starts fast.
+  - docker pull eclipse/zenoh:1.9.0
+  - touch /var/lib/cloud/instance/pod-prereqs-done

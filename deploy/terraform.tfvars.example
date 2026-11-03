@@ -1,0 +1,11 @@
+# Copy to terraform.tfvars (gitignored) and set your values.
+
+# REQUIRED — the only IP allowed to SSH in. Use your current public IP /32.
+#   curl -s https://checkip.amazonaws.com
+allowed_ssh_cidr = "203.0.113.10/32"
+
+# Optional overrides (defaults shown):
+# region        = "us-east-1"
+# instance_type = "t3.small"   # use a t4g.* type with arch=arm64 for cheaper ARM
+# arch          = "amd64"      # amd64 | arm64 (must match instance_type family)
+# name_prefix   = "velmara-pod-demo"

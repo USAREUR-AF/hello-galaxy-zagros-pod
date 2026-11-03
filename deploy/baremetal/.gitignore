@@ -1,0 +1,5 @@
+# operator/host-specific + secrets — never commit
+target.env
+bundle/
+pod.env
+*.pem

@@ -1,0 +1,60 @@
+// pod-router.json5.tmpl — the PARTNER pod's single-tenant Zenoh router.
+//
+// Rendered by stack/render.py from stack/registry/fabric.yaml. You never hand-edit
+// the rendered config.json5 — change the registry and re-render. Markers (__NAME__)
+// are filled by the renderer; everything else is fixed pod policy.
+//
+// This is the real moon-pod router posture: default-DENY, mTLS-gated, and it owns
+// exactly ONE partner namespace. The heavy multi-tenant enforcement lives on the
+// goat side (the fabric router), not here — the pod polices only itself.
+{
+  mode: "router",
+
+  // Local listen — pod-side clients (goat pub/sub, the audit sink) connect here over mTLS.
+  listen: { endpoints: ["tls/0.0.0.0:__LISTEN_PORT__"] },
+
+  // Dial OUT to the goat side over the mesh. The pod initiates; it is never dialled into.
+  // Endpoint comes from the registry (on ZAGROS: from the signed bundle's router_endpoint).
+  connect: { endpoints: ["__INGRESS_ENDPOINT__"] },
+
+  // A deterministic per-host router id so identity survives restarts (audit dedup,
+  // topology continuity). Derived from the router name — never random, never baked
+  // into the image. Mirrors ADR 1041 router ZID pinning.
+  id: "__ROUTER_ID__",
+
+  transport: {
+    link: {
+      tls: {
+        // One mTLS leaf identity used as both listener and connector. CA roots come
+        // from the bundle, never compiled in.
+        listen_certificate:  "/etc/zenoh/tls/router-cert.pem",
+        listen_private_key:  "/etc/zenoh/tls/router-key.pem",
+        connect_certificate: "/etc/zenoh/tls/router-cert.pem",
+        connect_private_key: "/etc/zenoh/tls/router-key.pem",
+        root_ca_certificate: "/etc/zenoh/tls/ca-roots.pem",
+        enable_mtls: true,
+        // The peer cert SAN binds a mesh IP, not the DNS name dialled — match the
+        // fabric/audit posture.
+        verify_name_on_connect: false,
+      },
+    },
+  },
+
+  plugins_loading: { enabled: true, search_dirs: ["/", "/opt/zenoh/plugins"] },
+
+  // Pod-side ACL: default-DENY. Rules are GENERATED from the registry by render.py —
+  // this partner's write/read namespaces and nothing else. A publish outside them is
+  // silently dropped (Zenoh denials are silent — that is expected, not a bug).
+  access_control: {
+    enabled: true,
+    default_permission: "deny",
+    rules: __ACL_RULES__,
+    subjects: [
+      // Any mTLS peer rooted in the bundle's CA (pod-local clients + the goat side).
+      { id: "mtls-peer", link_protocols: ["tls"] },
+    ],
+    policies: [
+      { rules: __ACL_RULE_IDS__, subjects: ["mtls-peer"] },
+    ],
+  },
+}

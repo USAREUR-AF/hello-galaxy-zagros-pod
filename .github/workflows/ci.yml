@@ -1,0 +1,27 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  render-check:
+    # Stands the loopback fabric up from the rendered configs and proves the routers
+    # peer — no goat CLI, no live fabric needed. The full goat-driven data-delivery
+    # smoke test (tests/smoke/loopback.sh) runs on a host that has the goat CLI.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: install pyyaml
+        run: python3 -m pip install --quiet pyyaml
+      - name: render-check (config validity + router peering)
+        run: bash tests/render-check.sh
+
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: shellcheck
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          shellcheck -x run.sh lib/common.sh stack/gen-certs.sh tests/*.sh tests/smoke/*.sh
