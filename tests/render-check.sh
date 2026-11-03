@@ -8,7 +8,7 @@
 #
 # This is the bit-rot guard: it runs in GitHub Actions (docker + python only). The full
 # operator smoke test (tests/smoke/loopback.sh) additionally drives the real `goat` CLI
-# and proves data delivery both ways — run that locally / on a host that has goat.
+# and proves data delivery both ways; CI runs it in the loopback-smoke job.
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT" || exit 1

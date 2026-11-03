@@ -5,7 +5,8 @@ This is a Hello Galaxy demo repo: a small, runnable example. Keep it that way.
 ## Bar
 
 - **It must run.** `./run.sh` stands the loopback fabric up and the smoke test must pass.
-  CI (`tests/render-check.sh`) gates config validity + router peering with no goat CLI.
+  CI gates config validity + router peering with no goat CLI (`tests/render-check.sh`), and
+  runs `./run.sh all` with the released goat CLI (the loopback smoke test).
 - **Nothing faked.** The demo drives the real stock Zenoh routers and the real `goat` CLI.
   Where a behaviour is a deployment property rather than something you control, say so.
 - **Self-contained + safe to develop in the open.** No internal infrastructure, hostnames,

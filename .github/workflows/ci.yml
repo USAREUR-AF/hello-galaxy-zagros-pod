@@ -7,8 +7,8 @@ on:
 jobs:
   render-check:
     # Stands the loopback fabric up from the rendered configs and proves the routers
-    # peer — no goat CLI, no live fabric needed. The full goat-driven data-delivery
-    # smoke test (tests/smoke/loopback.sh) runs on a host that has the goat CLI.
+    # peer — no goat CLI, no live fabric needed. The goat-driven data-delivery smoke
+    # test runs in the loopback-smoke job below.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,6 +16,37 @@ jobs:
         run: python3 -m pip install --quiet pyyaml
       - name: render-check (config validity + router peering)
         run: bash tests/render-check.sh
+
+  loopback-smoke:
+    # The laptop loopback end to end (./run.sh all): render, mint certs, start the two
+    # routers, then tests/smoke/loopback.sh drives the released goat CLI through them —
+    # data crosses both ways and the pod's default-deny holds. Fails if the smoke fails.
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GOAT_CLI_RELEASE: goat-cli-v0.5.14
+    steps:
+      - uses: actions/checkout@v4
+      - name: install pyyaml
+        run: python3 -m pip install --quiet pyyaml
+      - name: fetch the released goat CLI
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/goat" && cd "$RUNNER_TEMP/goat"
+          gh release download "$GOAT_CLI_RELEASE" --repo usareur-af/goatcore \
+            --pattern 'goat-linux-amd64*' --clobber
+          sha256sum -c goat-linux-amd64.sha256
+          sudo install -m 0755 goat-linux-amd64 /usr/local/bin/goat
+          goat --version
+      - name: loopback stand-up + smoke test
+        run: bash run.sh all
+      - name: router logs
+        if: failure()
+        run: bash run.sh logs
+      - name: tear down
+        if: always()
+        run: bash run.sh down
 
   shellcheck:
     runs-on: ubuntu-latest

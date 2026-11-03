@@ -60,8 +60,9 @@ Expected tail:
 
 Other subcommands: `./run.sh render` (just show the config generation), `up`, `smoke`,
 `down`, `logs`. The CI gate `tests/render-check.sh` proves config validity + router
-peering with **no goat CLI** (it runs in GitHub Actions); the full `tests/smoke/loopback.sh`
-adds the goat-driven data-delivery proof.
+peering with **no goat CLI**; the full `tests/smoke/loopback.sh` adds the goat-driven
+data-delivery proof. Both run in GitHub Actions on every pull request (the smoke test with
+the released goat CLI).
 
 ## What it demonstrates, mapped to the config-management story
 
@@ -78,14 +79,16 @@ adds the goat-driven data-delivery proof.
 
 - **Loopback** (this repo's default): everything runs locally with a throwaway CA and a
   stand-in fabric router. No goatnet, no credentials — the fastest way to *see it work*.
-- **A live goatnet**: run the same pod against a goatnet you operate or have been granted a
-  slot on, with a signed join bundle from that goatnet's operator. The `zagros` profile is
-  the sandbox shape described in `zagros-moon-pod` (setup-key enrollment, per-uuid slot
-  namespace). If you do not have a goatnet yet, goatcore's quickstart
-  [`docs/tutorials/00-goatlite.md`](https://github.com/usareur-af/goatcore/blob/main/docs/tutorials/00-goatlite.md)
-  stands one up on one box, and
-  [`usareur-af/hello-galaxy-goatenv`](https://github.com/usareur-af/hello-galaxy-goatenv)
-  walks a fuller one step by step. See
+- **A live goatnet**: run the same pod against any appropriate goatnet you have been granted
+  a slot on, with a signed join bundle from that goatnet's operators. That can be
+  EFDI, the shared sandbox goatnet that partners are onboarded to (if you are onboarded to it); <!-- oss-allow: operator-approved public example goatnet -->
+  a goatlite you stand up yourself on one box (goatcore's quickstart
+  [`docs/tutorials/00-goatlite.md`](https://github.com/usareur-af/goatcore/blob/main/docs/tutorials/00-goatlite.md), or the
+  fuller step-by-step walk in
+  [`usareur-af/hello-galaxy-goatenv`](https://github.com/usareur-af/hello-galaxy-goatenv));
+  or another goatnet you have access to. The `zagros` profile is an example profile for the
+  sandbox shape described in `zagros-moon-pod` (setup-key enrollment, per-uuid slot
+  namespace). See
   [`docs/partner-run-guide.md`](docs/partner-run-guide.md) and
   [`tests/smoke/live-goatnet.md`](tests/smoke/live-goatnet.md).
 
@@ -129,7 +132,7 @@ hello-galaxy-zagros-pod/
 ## Run it on a real host
 
 - **Cloud (demo, throwaway):** [`deploy/`](deploy/) — Terraform stands up a small box; the pod's
-  own router peers router-to-router with your goatnet's fabric router. Destroy it after.
+  own router peers router-to-router with the goatnet's fabric router. Destroy it after.
 - **Bare metal (sovereign, operational):** [`deploy/baremetal/`](deploy/baremetal/) — the same pod
   on a host you own. By principle, mission data at rest lives here, not in the cloud.
 

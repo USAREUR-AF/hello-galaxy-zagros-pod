@@ -14,7 +14,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 
 # Where the "goat side" of the fabric listens, and where pods dial it. In the
-# loopback demo these are docker-network hostnames; on ZAGROS the pod's endpoint
+# loopback demo these are docker-network hostnames; on a zagros-shaped goatnet the pod's endpoint
 # arrives in the signed join bundle (never hand-typed). See docs/router-config.md.
 fabric:
   # The goat-side router every pod peers OUT to.
@@ -38,7 +38,7 @@ routers:
     role: fabric
     listen_port: 7447
 
-# The participants. On ZAGROS each is a per-uuid SLOT the portal assigns: the cert CN,
+# The participants. On a zagros-shaped goatnet each is a per-uuid SLOT the portal assigns: the cert CN,
 # the portal prefix, and the write namespace are ALL the slot anchor (a UUID, not a
 # human name). `slot` below is that anchor. Human display/nation are for operators
 # and inspection tools only — they never appear in a machine path (ACL/cert/wire-key
@@ -47,7 +47,7 @@ partners:
   - handle: velmara-demo
     display: "Velmara Autonomous Systems Command"
     nation: "Republic of Velmara"
-    # The per-uuid ZAGROS slot anchor. Cert CN == portal prefix == write namespace.
+    # The per-uuid slot anchor (zagros shape). Cert CN == portal prefix == write namespace.
     # (Demo value; a real one is minted at onboarding and rides the signed bundle.)
     slot: "a1b2c3d4e5f60718293a4b5c6d7e8f90"
     # What this partner may do. The pod router default-denies everything else.

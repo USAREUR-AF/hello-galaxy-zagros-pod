@@ -1,12 +1,15 @@
 # Partner run guide — stand the pod up against a live goatnet
 
 The laptop loopback (`./run.sh`) proves the mechanics with no fabric and no credentials.
-This guide is the **live** path: run the same pod against a goatnet — one you operate, or
-one whose operator has granted you a slot — using a signed join bundle. Every step here
-needs that goatnet. The `zagros` profile matches the sandbox shape described in
-[`usareur-af/zagros-moon-pod`](https://github.com/usareur-af/zagros-moon-pod) (setup-key
-enrollment, per-uuid slot namespace). To stand up a goatnet of your own, start from goatcore's
-[`docs/tutorials/00-goatlite.md`](https://github.com/usareur-af/goatcore/blob/main/docs/tutorials/00-goatlite.md).
+This guide is the **live** path: run the same pod against any appropriate goatnet whose
+operators have granted you a slot, using a signed join bundle. Every step here needs that
+goatnet. It can be
+EFDI, the shared sandbox goatnet that partners are onboarded to (if you are onboarded to it); <!-- oss-allow: operator-approved public example goatnet -->
+a goatlite you stand up yourself (goatcore's
+[`docs/tutorials/00-goatlite.md`](https://github.com/usareur-af/goatcore/blob/main/docs/tutorials/00-goatlite.md)); or another
+goatnet you have access to. The `zagros` profile is an example profile for the sandbox shape
+described in [`usareur-af/zagros-moon-pod`](https://github.com/usareur-af/zagros-moon-pod)
+(setup-key enrollment, per-uuid slot namespace).
 
 You run the pod on your own host; everything environment-specific is carried in the bundle,
 not configured by hand.

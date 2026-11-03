@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # pod-up.sh — run ON the deployed instance to bring the moon-pod router up, peer it
-# into your goatnet's fabric (router-to-router), and publish THROUGH it.
+# into the goatnet's fabric (router-to-router), and publish THROUGH it.
 #
 # This is the real moon-pod path: a partner-side zenohd dials the fabric router over
 # the mesh; a local publisher writes to the LOCAL pod router only, so anything that
@@ -52,7 +52,7 @@ openssl x509 -req -in s.csr -CA local-ca.pem -CAkey local-ca-key.pem -CAcreatese
 openssl req -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 -nodes -keyout local-cli-key.pem -out c.csr -subj "/CN=pod-local-pub" 2>/dev/null
 openssl x509 -req -in c.csr -CA local-ca.pem -CAkey local-ca-key.pem -CAcreateserial -out local-cli.pem -days 2 \
   -extfile <(printf "extendedKeyUsage=clientAuth\n") 2>/dev/null
-# the router validates BOTH the fabric server cert (zagros CA) and local clients (local CA)
+# the router validates BOTH the fabric server cert (the fabric CA) and local clients (local CA)
 cat "'"$B"'/ca.pem" local-ca.pem > combined-ca.pem
 rm -f s.csr c.csr
 '
@@ -69,7 +69,7 @@ sudo tee /etc/zenoh/config.json5 >/dev/null <<EOF
     listen_certificate:  "/etc/zenoh/tls/local-srv.pem", listen_private_key: "/etc/zenoh/tls/local-srv-key.pem",
     // the pod DIALS OUT to the fabric as a client -> present the slot (client-auth) cert
     connect_certificate: "/etc/zenoh/tls/fabric-cert.pem", connect_private_key: "/etc/zenoh/tls/fabric-key.pem",
-    // trust both: the fabric's CA (validate ZAGROS) + the local CA (validate pod-side clients)
+    // trust both: the fabric CA (validate the fabric router) + the local CA (validate pod-side clients)
     root_ca_certificate: "/etc/zenoh/tls/combined-ca.pem",
     enable_mtls: true, verify_name_on_connect: false,
   }}},

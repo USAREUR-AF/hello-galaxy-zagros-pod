@@ -1,7 +1,7 @@
 # deploy/ — stand the pod up on a real cloud box and peer it into the fabric
 
 Minimal IaC that proves the **literal moon-pod path end-to-end**: a Linux instance runs
-the partner's own Zenoh **router**, that router dials your goatnet's fabric router over the mesh
+the partner's own Zenoh **router**, that router dials the goatnet's fabric router over the mesh
 (**router-to-router peering**), and a local publisher writes *through* it — so anything that
 reaches the fabric provably transited the pod's router.
 
