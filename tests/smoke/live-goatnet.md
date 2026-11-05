@@ -12,9 +12,17 @@ goatnet.
 
 ## Steps
 
+The bundle is the one-time cert tarball the goatnet's operator hands you when your pod is
+enrolled as a machine (`goat machine enroll <handle> --node-class MOON`). It holds
+`<slot>-goat-cli.cbor` and, beside it, `<slot>-goat-cli-ca.pem`. Copy `profiles/zagros/` to
+a profile of your own and replace `CHANGE-ME-zagros-uuid-slot` with your slot id.
+
 ```
-# 1. Stand the pod up against the goatnet (zagros = the sandbox-shaped profile):
-sudo ./host/first-boot.sh zagros /path/to/<handle>.cbor
+# 0. goat trusts no goatnet until you add the root that signed your bundle:
+sudo GOAT_PROFILE_DIR=/var/lib/goat-moon/goat-cli goat ca add /path/to/<slot>-goat-cli-ca.pem
+
+# 1. Stand the pod up against the goatnet (your copy of the zagros profile):
+sudo ./host/first-boot.sh <your-profile> /path/to/<slot>-goat-cli.cbor
 
 # 2. Reach + identity:
 sudo GOAT_PROFILE_DIR=/var/lib/goat-moon/goat-cli goat doctor --all
@@ -22,7 +30,11 @@ sudo GOAT_PROFILE_DIR=/var/lib/goat-moon/goat-cli goat doctor --all
 
 # 3. Outbound — publish on your slot, observe it on the fabric:
 sudo GOAT_PROFILE_DIR=/var/lib/goat-moon/goat-cli goat pub '<slot>/test/ping' --payload '{"hello":"galaxy"}' --encoding json --confirm
-#    --confirm reports landed / not-confirmed (it reads the key back).
+#    --confirm reports landed / not-confirmed (it reads the key back). A freshly enrolled slot
+#    has no storage until the goatnet registers one for it, so --confirm reports
+#    not-confirmed with "no storage is registered for the prefix". Prove delivery with a live
+#    subscriber instead: someone on the goatnet who may read your slot runs
+#    goat sub '<slot>/test/**' --follow, and sees your publish arrive.
 
 # 4. Inbound (when a bilateral grant exists) — subscribe to release/goat:
 sudo GOAT_PROFILE_DIR=/var/lib/goat-moon/goat-cli goat sub 'release/goat/**' --follow

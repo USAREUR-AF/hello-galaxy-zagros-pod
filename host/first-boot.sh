@@ -84,9 +84,12 @@ CTX_DIR="$(dirname "${CERT_PATH}")"
 
 # --- [2/6] Lay the pod's Zenoh mTLS material from the goat-cli-extracted certs -------------------
 echo "==> [2/6] laying Zenoh mTLS certs from the goat-cli profile"
-install -m 600 "${CTX_DIR}/mtls.cert.pem" "${ZENOH_TLS_DIR}/pod-cert.pem"
-install -m 600 "${CTX_DIR}/mtls.key.pem"  "${ZENOH_TLS_DIR}/pod-key.pem"
-install -m 600 "${CTX_DIR}/ca-roots.pem"  "${ZENOH_TLS_DIR}/ca-roots.pem"
+# The audit sink runs as the image's non-root user (uid/gid 65532), so the files are group-
+# readable by that gid only; the router runs as root and reads them either way.
+AUDIT_SINK_GID="${AUDIT_SINK_GID:-65532}"
+install -m 640 -g "${AUDIT_SINK_GID}" "${CTX_DIR}/mtls.cert.pem" "${ZENOH_TLS_DIR}/pod-cert.pem"
+install -m 640 -g "${AUDIT_SINK_GID}" "${CTX_DIR}/mtls.key.pem"  "${ZENOH_TLS_DIR}/pod-key.pem"
+install -m 640 -g "${AUDIT_SINK_GID}" "${CTX_DIR}/ca-roots.pem"  "${ZENOH_TLS_DIR}/ca-roots.pem"
 
 # --- [3/6] Render the pod Zenoh router config ---------------------------------------------------
 # The SIGNED BUNDLE is the single source of truth for the fabric router endpoint: `goat profile
