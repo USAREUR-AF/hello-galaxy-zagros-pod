@@ -4,7 +4,6 @@ The laptop loopback (`./run.sh`) proves the mechanics with no fabric and no cred
 This guide is the **live** path: run the same pod against any appropriate goatnet whose
 operators have granted you a slot, using a signed join bundle. Every step here needs that
 goatnet. It can be
-EFDI, the shared sandbox goatnet that partners are onboarded to (if you are onboarded to it); <!-- oss-allow: operator-approved public example goatnet -->
 a goatlite you stand up yourself (goatcore's
 [`docs/tutorials/00-goatlite.md`](https://github.com/usareur-af/goatcore/blob/main/docs/tutorials/00-goatlite.md)); or another
 goatnet you have access to. The `zagros` profile is an example profile for the sandbox shape

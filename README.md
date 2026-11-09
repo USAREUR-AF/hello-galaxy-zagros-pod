@@ -81,7 +81,6 @@ the released goat CLI).
   stand-in fabric router. No goatnet, no credentials — the fastest way to *see it work*.
 - **A live goatnet**: run the same pod against any appropriate goatnet you have been granted
   a slot on, with a signed join bundle from that goatnet's operators. That can be
-  EFDI, the shared sandbox goatnet that partners are onboarded to (if you are onboarded to it); <!-- oss-allow: operator-approved public example goatnet -->
   a goatlite you stand up yourself on one box (goatcore's quickstart
   [`docs/tutorials/00-goatlite.md`](https://github.com/usareur-af/goatcore/blob/main/docs/tutorials/00-goatlite.md), or the
   fuller step-by-step walk in
