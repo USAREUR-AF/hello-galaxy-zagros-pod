@@ -4,6 +4,9 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   render-check:
     # Stands the loopback fabric up from the rendered configs and proves the routers
@@ -11,7 +14,7 @@ jobs:
     # test runs in the loopback-smoke job below.
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: install pyyaml
         run: python3 -m pip install --quiet pyyaml
       - name: render-check (config validity + router peering)
@@ -26,7 +29,7 @@ jobs:
     env:
       GOAT_CLI_RELEASE: goat-cli-v0.5.14
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: install pyyaml
         run: python3 -m pip install --quiet pyyaml
       - name: fetch the released goat CLI
@@ -51,7 +54,7 @@ jobs:
   shellcheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: shellcheck
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
