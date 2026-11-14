@@ -12,6 +12,9 @@ parts a scaffold leaves as an exercise: the full stack standup, the rendered rou
 configuration, and an automated smoke test that shows data actually crossing between
 routers.
 
+> **What a moon-pod is for today** is in [Run it on a real host](#run-it-on-a-real-host). Read it
+> before you run a pod anywhere but a laptop.
+
 ## The questions this answers
 
 It exists to answer a recurring set of questions about how router configuration is handled:
@@ -124,16 +127,30 @@ hello-galaxy-zagros-pod/
 ├── profiles/zagros/profile.env  fallback values for a zagros-shaped sandbox goatnet
 ├── host/first-boot.sh           the real-bundle bring-up (live path)
 ├── clients/python/              worked publisher + subscriber
-└── deploy/                      IaC: stand a pod on a CLOUD box (demo) + on BARE METAL (sovereign)
-    └── baremetal/               on-prem target — where mission data at rest belongs
+└── deploy/                      IaC: stand a pod on a CLOUD box (demo) + on BARE METAL (your host)
+    └── baremetal/               on-prem target — the same pod on a host you own
 ```
 
 ## Run it on a real host
 
+What a moon-pod is for today, wherever you run it:
+
+- **It is for learning.** A moon-pod is rung 2 of the learner ladder, and that is its only use
+  today. It is not in operational use.
+- **It is not a sovereignty guarantee.** A pod joins an environment that someone else runs. That
+  environment's owner controls enrolment, the access rules, and what data may leave the pod.
+- **It could become a real capability on one condition:** the pod's operator treats the
+  environment owner as trusted, and as the authority over the pod's ability to move data outside
+  the pod.
+- **A party that needs sovereignty runs its own environment** and federates with others across a
+  boundary. That is a different thing from a pod.
+
+There are two ways to put the pod on a real host:
+
 - **Cloud (demo, throwaway):** [`deploy/`](deploy/) — Terraform stands up a small box; the pod's
   own router peers router-to-router with the goatnet's fabric router. Destroy it after.
-- **Bare metal (sovereign, operational):** [`deploy/baremetal/`](deploy/baremetal/) — the same pod
-  on a host you own. By principle, mission data at rest lives here, not in the cloud.
+- **Bare metal (a host you own):** [`deploy/baremetal/`](deploy/baremetal/) — the same pod on a
+  host that already exists. Only the host differs; what the pod is for does not.
 
 Both deliver the signed bundle out-of-band; no secrets or account particulars are ever committed.
 
