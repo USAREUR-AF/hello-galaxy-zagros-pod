@@ -1,9 +1,8 @@
-# baremetal/ — the sovereign target (on-prem host)
+# baremetal/ — the same pod on a host you own (on-prem host)
 
-Deploy the moon-pod onto a host **you already own, in your facility**. This is the target
-that matters operationally: by principle, **mission data at rest does not live in the cloud**
-— it lives on sovereign hardware. The cloud path (`..`) is only a convenience for a
-**demo**; this is the real shape.
+Deploy the moon-pod onto a host **you already own**, instead of one provisioned in a cloud.
+It is the same pod, for the same purpose: what a moon-pod is for today, and what it is not,
+is in [Run it on a real host](../../README.md#run-it-on-a-real-host).
 
 The pod is identical to the cloud demo — same `pod-up.sh`, same signed bundle. The only
 difference is that the host already exists (nothing is provisioned in anyone's cloud) and the
@@ -24,15 +23,15 @@ the cloud path's cloud-init), delivers the bundle out-of-band, and runs `pod-up.
 the mesh → start the pod router → **peer router-to-router with the fabric** → publish through
 it. Check the fabric panoscope; your identity should be live.
 
-## Why this is the sovereignty story
+## Cloud and bare metal compared
 
 | | Cloud (`..`) | Bare metal (here) |
 |---|---|---|
-| Purpose | demo / throwaway | real operations |
+| Purpose | demo / throwaway | the same pod, on a host you keep |
 | Host | provisioned EC2 (ephemeral) | **yours, on-prem** |
-| Mission data at rest | not allowed (demo only, destroy after) | **stays on your hardware** |
 | The pod | identical | identical |
 | Provisioning | Terraform | none — the host exists |
 
-Nothing about the fabric, the identity, or the pod changes between the two. Sovereignty is a
-property of **where you run it**, and the pod is built so that's a free choice.
+Nothing about the fabric, the identity, or the pod changes between the two, and neither does
+who decides what the pod may do. Running the pod on your own hardware does not make it
+sovereign: see [Run it on a real host](../../README.md#run-it-on-a-real-host).

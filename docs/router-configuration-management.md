@@ -60,7 +60,7 @@ Configuration is applied by automation, not by logging into routers:
 
 - **The same artifact runs everywhere.** The pod hardcodes nothing environment-specific.
   Which fabric, which identity, which namespace all arrive from the registry (loopback) or
-  the signed join bundle (a live goatnet). Moving a pod from sandbox to production is a different
+  the signed join bundle (a live goatnet). Moving a pod to another goatnet is a different
   bundle, never a code change.
 
 There is no manual "edit the router and reload" step in which a box can silently drift from

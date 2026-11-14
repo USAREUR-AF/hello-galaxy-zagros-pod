@@ -1,8 +1,9 @@
 # Architecture — how the pod is shaped and where the router sits
 
-A moon-pod is a small, single-host appliance a partner runs on their own hardware to
-exchange data with the goat fabric securely, without joining the fabric wholesale. This repo
-is a worked instance of that for the fictional **Velmara Autonomous Systems Command**.
+A moon-pod is a small, single-host appliance that exchanges data with the goat fabric through
+its own router, without joining the fabric wholesale. This repo is a worked instance of that for
+the fictional **Velmara Autonomous Systems Command**. What a moon-pod is for today, and what it
+is not, is in [Run it on a real host](../README.md#run-it-on-a-real-host).
 
 ## The two things this repo runs
 
@@ -22,7 +23,7 @@ Both routers are stock `eclipse/zenoh`, both configs rendered from `stack/regist
 The smoke test drives the real `goat` CLI against each side to prove data crosses the peering
 both ways and that the pod's default-deny holds. No live fabric, no credentials.
 
-### 2. The live pod (the real moon-pod, against a goatnet)
+### 2. The live pod (against a goatnet)
 
 ```
 Partner host (systemd)
@@ -62,6 +63,6 @@ The real receiver for a pod's data is a goat-operated **ingress gateway**: it au
 the pod's verified peering identity, admits its data origin-scoped, and records provenance —
 a moon-pod is a non-goat↔goat (Tier-2) peer, so it does not federate directly into a core
 router. In the loopback that gateway is approximated by the permissive `fabric-router`; in
-production it is the load-bearing enforcement. The pod is built to plug into it with no
+a live goatnet it is the load-bearing enforcement. The pod is built to plug into it with no
 rework: the pod publishes its own namespace regardless; the admitted shape is the receiver's
 concern.
