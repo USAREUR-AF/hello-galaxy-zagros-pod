@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 460" width="880" height="460" role="img" aria-label="./run.sh renders pod-router and fabric-router from one file, stack/registry/fabric.yaml, starts both as stock Zenoh routers peered over mTLS, and runs the smoke test: the pod's publish on its own namespace reaches the goat side, a publish outside it is denied, and the goat side's release/goat publish reaches the pod."><style>svg{--ink:#e7e9ec; --quiet:#a5acb7; --rule:#30363e; --line:#7b8592; --paper:#121417; --panel:#1a1d21; --accent:#6cc3da; --accent-soft:#14303a; --on-accent:#121417; --good:#6fc480; --good-bg:#1b2e20; --warn:#e2b04e; --warn-bg:#32291a; --info:#86b3ea; --info-bg:#1a2636; --crit:#f08b80; --crit-bg:#3a1f1f; --mute:#9ba2ac; --mute-bg:#24262b; font-family:'Helvetica Neue',Helvetica,Arial,'Liberation Sans',sans-serif}
+.t{fill:var(--ink)} .tq{fill:var(--quiet)} .ta{fill:var(--accent)} .tg{fill:var(--good)}
+.tw{fill:var(--warn)} .ti{fill:var(--info)} .tc{fill:var(--crit)} .tm{fill:var(--mute)} .ton{fill:var(--on-accent)}
+.bx{fill:var(--paper);stroke:var(--line);stroke-width:1.25} .bxp{fill:var(--panel);stroke:var(--rule);stroke-width:1.25}
+.bxa{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.25} .bxg{fill:var(--good-bg);stroke:var(--good);stroke-width:1.25}
+.bxw{fill:var(--warn-bg);stroke:var(--warn);stroke-width:1.25} .bxi{fill:var(--info-bg);stroke:var(--info);stroke-width:1.25}
+.bxc{fill:var(--crit-bg);stroke:var(--crit);stroke-width:1.25} .bxm{fill:var(--mute-bg);stroke:var(--mute);stroke-width:1.25}
+.bxd{fill:var(--paper);stroke:var(--line);stroke-width:1.25;stroke-dasharray:5 4}
+.bxz{fill:none;stroke:var(--accent);stroke-width:1.25;stroke-dasharray:6 4}
+.ln{stroke:var(--line);stroke-width:1.5;fill:none} .lna{stroke:var(--accent);stroke-width:2.25;fill:none}
+.lng{stroke:var(--good);stroke-width:2;fill:none} .lnw{stroke:var(--warn);stroke-width:2;fill:none}
+.lnc{stroke:var(--crit);stroke-width:2;fill:none} .lnx{stroke:var(--crit);stroke-width:2;fill:none;stroke-dasharray:4 5}
+.lnd{stroke:var(--line);stroke-width:1.25;fill:none;stroke-dasharray:6 5} .lnr{stroke:var(--rule);stroke-width:1;fill:none}
+.fa{fill:var(--accent)} .fg{fill:var(--good)} .fl{fill:var(--line)} .fw{fill:var(--warn)} .fi{fill:var(--info)}
+.fc{fill:var(--crit)} .fm{fill:var(--mute)} .fp{fill:var(--panel)} .fs{fill:var(--accent-soft)} .fpaper{fill:var(--paper)}
+.mono{font-family:Menlo,Consolas,'Liberation Mono',monospace}
+</style>
+<text x="24" y="38" class="t" font-size="20" font-weight="700" data-role="title">One registry file configures both routers, and the smoke test proves data crosses</text>
+<text x="24" y="66" class="tq" font-size="15">./run.sh: render, mint a throwaway CA, start two stock Zenoh routers over mTLS, smoke test.</text>
+<rect x="20" y="96" width="352" height="140" rx="12" class="bxa"/>
+<text x="36" y="124" class="ta mono" font-size="14" font-weight="700">stack/registry/fabric.yaml</text>
+<text x="36" y="152" class="tq" font-size="14">routers</text>
+<text x="108" y="152" class="t mono" font-size="14">pod-router, fabric-router</text>
+<text x="36" y="173" class="tq" font-size="14">partner</text>
+<text x="108" y="173" class="t mono" font-size="14">velmara-demo</text>
+<text x="36" y="194" class="tq" font-size="14">write</text>
+<text x="108" y="194" class="t mono" font-size="14">a1b2c3d4…/**</text>
+<text x="36" y="215" class="tq" font-size="14">read</text>
+<text x="108" y="215" class="t mono" font-size="14">release/goat/**</text>
+<path d="M452 166L442 171L442 161z" class="fa"/>
+<path d="M372 166L443 166" class="lna"/>
+<rect x="452" y="132" width="168" height="68" rx="8" class="bx"/>
+<text x="466" y="158" class="t" font-size="15" font-weight="700">render.py</text>
+<text x="466" y="179" class="tq" font-size="14">no hand edits</text>
+<text x="640" y="156" class="tq" font-size="14">one config.json5</text>
+<text x="640" y="176" class="tq" font-size="14">per router</text>
+<path d="M138 290L133 280L143 280z" class="fa"/>
+<path d="M500 200L500 254L138 254L138 281" class="lna"/>
+<path d="M742 290L737 280L747 280z" class="fa"/>
+<path d="M572 200L572 254L742 254L742 281" class="lna"/>
+<rect x="20" y="290" width="236" height="150" rx="8" class="bxp"/>
+<text x="34" y="316" class="t" font-size="15" font-weight="700">pod-router</text>
+<text x="34" y="337" class="tq" font-size="14">the partner's own router</text>
+<text x="34" y="357.3" class="tq" font-size="14">default deny</text>
+<text x="34" y="406" class="tq" font-size="14">partner</text>
+<text x="90.4" y="406" class="t mono" font-size="14">velmara-demo</text>
+<rect x="624" y="290" width="236" height="150" rx="8" class="bxp"/>
+<text x="638" y="316" class="t" font-size="15" font-weight="700">fabric-router</text>
+<text x="638" y="337" class="tq" font-size="14">stands in for the</text>
+<text x="638" y="357.3" class="tq" font-size="14">goat side</text>
+<circle cx="280" cy="320" r="15" class="fa"/>
+<text x="280" y="324.6" class="ton" font-size="13" text-anchor="middle" font-weight="700">1</text>
+<text x="302" y="325" class="t mono" font-size="14">a1b2c3d4…/test/ping</text>
+<path d="M624 338L614 343L614 333z" class="fg"/>
+<path d="M256 338L615 338" class="lng"/>
+<circle cx="564" cy="338" r="10" class="fg"/>
+<path d="M559 338l3.6 3.6l6.4-7.2" style="stroke:var(--paper);stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round"/>
+<circle cx="280" cy="368" r="15" class="fa"/>
+<text x="280" y="372.6" class="ton" font-size="13" text-anchor="middle" font-weight="700">2</text>
+<text x="302" y="373" class="t mono" font-size="14">forbidden/intrusion</text>
+<path d="M256 386L480 386" class="lnx"/>
+<circle cx="490" cy="386" r="10" class="fc"/>
+<path d="M486 382l8 8M494 382l-8 8" style="stroke:var(--paper);stroke-width:2.4;stroke-linecap:round"/>
+<text x="506" y="391" class="tc" font-size="14" font-weight="700">denied</text>
+<circle cx="280" cy="416" r="15" class="fa"/>
+<text x="280" y="420.6" class="ton" font-size="13" text-anchor="middle" font-weight="700">3</text>
+<text x="302" y="421" class="t mono" font-size="14">release/goat/test/pong</text>
+<path d="M256 434L266 429L266 439z" class="fg"/>
+<path d="M624 434L265 434" class="lng"/>
+<circle cx="356" cy="434" r="10" class="fg"/>
+<path d="M351 434l3.6 3.6l6.4-7.2" style="stroke:var(--paper);stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round"/>
+</svg>

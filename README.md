@@ -1,5 +1,10 @@
 # hello-galaxy-zagros-pod
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/figures/registry-to-routers-dark.svg">
+  <img src="docs/figures/registry-to-routers-light.svg" width="760" alt="./run.sh renders pod-router and fabric-router from one file, stack/registry/fabric.yaml, starts both as stock Zenoh routers peered over mTLS, and runs the smoke test: the pod's publish on its own namespace reaches the goat side, a publish outside it is denied, and the goat side's release/goat publish reaches the pod.">
+</picture>
+
 **A runnable, end-to-end example that stands a partner data-pod and its router up from
 scratch, configures the router from a central source of truth, and proves data peers
 across routers — on a laptop, in one command.**
